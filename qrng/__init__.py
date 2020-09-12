@@ -10,12 +10,12 @@ _bitCache = ''
 def set_provider_as_IBMQ(token):
   global provider
   if token == '':
-    provider = qiskit.BasicAer 
-  else: 
+    provider = qiskit.BasicAer
+  else:
     IBMQ.save_account(token)
     IBMQ.load_account()
     provider = IBMQ.get_provider('ibm-q')
- 
+
 def _set_qubits(n):
     global _circuit
     qr = qiskit.QuantumRegister(n)
@@ -25,7 +25,7 @@ def _set_qubits(n):
     _circuit.measure(qr,cr) # Collapses qubit to either 1 or 0 w/ equal prob.
 
 _set_qubits(8) # Default Circuit is 8 Qubits
- 
+
 def set_backend(b = 'qasm_simulator'):
     global _backend
     global provider
@@ -38,7 +38,7 @@ def set_backend(b = 'qasm_simulator'):
         _set_qubits(15)
     elif b == 'ibmq_armonk':
         _backend = provider.get_backend(b)
-        _set_qubits(1)        
+        _set_qubits(1)
     elif b == 'ibmq_qasm_simulator':
         _backend = provider.get_backend(b)
         _set_qubits(32)
