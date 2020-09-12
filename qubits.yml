@@ -1,0 +1,12 @@
+---
+
+qubits:
+ ibmq_london: 5
+ ibmq_burlington: 5
+ ibmq_essex: 5
+ ibmq_ourense: 5
+ ibmq_vigo: 5
+ ibmqx2: 5
+ ibmq_16_melbourne: 15
+ ibmq_armonk: 1
+ ibmq_qasm_simulator: 32

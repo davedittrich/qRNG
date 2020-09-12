@@ -4,6 +4,8 @@ import qiskit
 from qiskit import IBMQ
 import math
 import struct
+import yaml
+
 
 _circuit = None
 _bitCache = ''
@@ -26,23 +28,24 @@ def _set_qubits(n):
 
 _set_qubits(8) # Default Circuit is 8 Qubits
 
+def load_qubits(qubits_map="qubits.yml"):
+    """Load YAML file with mapping of providers and qubit capacity."""
+    with open(qubits_map, 'r') as qm:
+        qubits_dict = yaml.load(qm, Loader=yaml.FullLoader)
+    if 'qubits' not in qubits_dict:
+        print('invalid qubits.yml file')
+    return qubits_dict['qubits']
+
+
 def set_backend(b = 'qasm_simulator'):
     global _backend
     global provider
-    if b == 'ibmq_london' or b == 'ibmq_burlington' or b == 'ibmq_essex'\
-     or b == 'ibmq_ourense' or b == 'ibmq_vigo' or b == 'ibmqx2' :
+
+    try:
+        qubits = load_qubits()
         _backend = provider.get_backend(b)
-        _set_qubits(5)
-    elif b == 'ibmq_16_melbourne':
-        _backend = provider.get_backend(b)
-        _set_qubits(15)
-    elif b == 'ibmq_armonk':
-        _backend = provider.get_backend(b)
-        _set_qubits(1)
-    elif b == 'ibmq_qasm_simulator':
-        _backend = provider.get_backend(b)
-        _set_qubits(32)
-    else:
+        _set_qubits([b])
+    except Exception:
         _backend = qiskit.BasicAer.get_backend('qasm_simulator')
         _set_qubits(8)
 
@@ -120,3 +123,11 @@ def get_random_complex_polar(r,theta=2*math.pi):
     r0 = r * math.sqrt(get_random_float(0,1))
     theta0 = get_random_float(0,theta)
     return r0*math.cos(theta0)+r0*math.sin(theta0)*1j
+
+
+if __name__ == "__main__":
+    qubits = load_qubits()
+    print("Providers and supported qubits")
+    print("------------------------------")
+    for provider in qubits.keys():
+        print(f"{provider}: {qubits[provider]}")
